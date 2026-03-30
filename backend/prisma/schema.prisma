@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                String     @id @default(uuid())
+  name              String
+  slug              String     @unique
+  plan              Plan       @default(STARTER)
+  kraPin            String?
+  phone             String
+  email             String
+  address           String?
+  mpesaShortcode    String?
+  mpesaPasskey      String?
+  etimsDeviceSerial String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  users             User[]
+  products          Product[]
+  sales             Sale[]
+  employees         Employee[]
+  payrolls          Payroll[]
+  properties        Property[]
+  students          Student[]
+  invoices          Invoice[]
+  smsLogs           SmsLog[]
+}
+
+enum Plan {
+  STARTER
+  BUSINESS
+  ENTERPRISE
+}
+
+model User {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  email     String
+  phone     String?
+  password  String
+  role      UserRole @default(STAFF)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([tenantId, email])
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  STAFF
+  ACCOUNTANT
+}
+
+model Product {
+  id             String          @id @default(uuid())
+  tenantId       String
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name           String
+  sku            String
+  barcode        String?
+  category       String
+  buyingPrice    Float
+  sellingPrice   Float
+  vatRate        Float           @default(16)
+  stock          Int             @default(0)
+  lowStockAt     Int             @default(10)
+  unit           String          @default("pcs")
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
+
+  @@unique([tenantId, sku])
+}
+
+model Sale {
+  id             String        @id @default(uuid())
+  tenantId       String
+  tenant         Tenant        @relation(fields: [tenantId], references: [id])
+  receiptNo      String
+  customerPhone  String?
+  customerName   String?
+  subtotal       Float
+  vatAmount      Float
+  discount       Float         @default(0)
+  total          Float
+  paymentMethod  PaymentMethod
+  mpesaRef       String?
+  etimsQrCode    String?
+  etimsInvoiceNo String?
+  status         SaleStatus    @default(COMPLETED)
+  createdAt      DateTime      @default(now())
+  items          SaleItem[]
+
+  @@unique([tenantId, receiptNo])
+}
+
+model SaleItem {
+  id        String  @id @default(uuid())
+  saleId    String
+  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int
+  unitPrice Float
+  vatRate   Float
+  subtotal  Float
+}
+
+model StockMovement {
+  id        String       @id @default(uuid())
+  productId String
+  product   Product      @relation(fields: [productId], references: [id])
+  type      MovementType
+  qty       Int
+  reason    String?
+  createdAt DateTime     @default(now())
+}
+
+enum PaymentMethod {
+  MPESA
+  CASH
+  CARD
+  BANK_TRANSFER
+  CREDIT
+}
+
+enum SaleStatus {
+  COMPLETED
+  REFUNDED
+  VOIDED
+}
+
+enum MovementType {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+  RETURN
+  DAMAGE
+}
+
+model Employee {
+  id          String    @id @default(uuid())
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  employeeNo  String
+  name        String
+  idNumber    String
+  kraPin      String?
+  phone       String
+  email       String?
+  department  String
+  designation String
+  basicSalary Float
+  allowances  Json      @default("{}")
+  mpesaPhone  String?
+  paymentMode String    @default("MPESA")
+  joinDate    DateTime
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  payslips    Payslip[]
+
+  @@unique([tenantId, employeeNo])
+}
+
+model Payroll {
+  id          String        @id @default(uuid())
+  tenantId    String
+  tenant      Tenant        @relation(fields: [tenantId], references: [id])
+  month       Int
+  year        Int
+  totalGross  Float
+  totalPaye   Float
+  totalNhif   Float
+  totalNssf   Float
+  totalNet    Float
+  status      PayrollStatus @default(DRAFT)
+  processedAt DateTime?
+  createdAt   DateTime      @default(now())
+  payslips    Payslip[]
+
+  @@unique([tenantId, month, year])
+}
+
+model Payslip {
+  id              String   @id @default(uuid())
+  payrollId       String
+  payroll         Payroll  @relation(fields: [payrollId], references: [id])
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id])
+  basicSalary     Float
+  allowances      Float
+  grossSalary     Float
+  paye            Float
+  nhif            Float
+  nssf            Float
+  otherDeductions Float    @default(0)
+  netSalary       Float
+  mpesaRef        String?
+  sentViaSms      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+enum PayrollStatus {
+  DRAFT
+  APPROVED
+  PAID
+}
+
+model Property {
+  id         String       @id @default(uuid())
+  tenantId   String
+  tenant     Tenant       @relation(fields: [tenantId], references: [id])
+  name       String
+  address    String
+  type       PropertyType
+  totalUnits Int
+  isActive   Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  units      Unit[]
+}
+
+model Unit {
+  id            String   @id @default(uuid())
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id])
+  unitNo        String
+  type          String
+  rentAmount    Float
+  depositAmount Float
+  isOccupied    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  leases        Lease[]
+}
+
+model Lease {
+  id          String        @id @default(uuid())
+  unitId      String
+  unit        Unit          @relation(fields: [unitId], references: [id])
+  tenantName  String
+  tenantPhone String
+  tenantIdNo  String
+  startDate   DateTime
+  endDate     DateTime?
+  rentAmount  Float
+  depositPaid Float
+  status      LeaseStatus   @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  payments    RentPayment[]
+}
+
+model RentPayment {
+  id       String   @id @default(uuid())
+  leaseId  String
+  lease    Lease    @relation(fields: [leaseId], references: [id])
+  month    Int
+  year     Int
+  amount   Float
+  mpesaRef String?
+  paidAt   DateTime @default(now())
+  isLate   Boolean  @default(false)
+  smsSent  Boolean  @default(false)
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  MIXED
+}
+
+enum LeaseStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+model Student {
+  id            String       @id @default(uuid())
+  tenantId      String
+  tenant        Tenant       @relation(fields: [tenantId], references: [id])
+  admNo         String
+  name          String
+  dob           DateTime
+  gender        String
+  guardianName  String
+  guardianPhone String
+  guardianEmail String?
+  class         String
+  stream        String?
+  year          Int
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  feePayments   FeePayment[]
+
+  @@unique([tenantId, admNo])
+}
+
+model FeeStructure {
+  id        String   @id @default(uuid())
+  tenantId  String
+  class     String
+  term      Int
+  year      Int
+  tuition   Float
+  lunch     Float    @default(0)
+  activity  Float    @default(0)
+  boarding  Float    @default(0)
+  total     Float
+  createdAt DateTime @default(now())
+}
+
+model FeePayment {
+  id        String   @id @default(uuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  term      Int
+  year      Int
+  amount    Float
+  balance   Float
+  mpesaRef  String?
+  receiptNo String
+  smsSent   Boolean  @default(false)
+  paidAt    DateTime @default(now())
+}
+
+model Invoice {
+  id          String        @id @default(uuid())
+  tenantId    String
+  tenant      Tenant        @relation(fields: [tenantId], references: [id])
+  invoiceNo   String
+  clientName  String
+  clientEmail String?
+  clientPhone String?
+  items       Json
+  subtotal    Float
+  vat         Float
+  total       Float
+  dueDate     DateTime
+  status      InvoiceStatus @default(UNPAID)
+  etimsRef    String?
+  createdAt   DateTime      @default(now())
+
+  @@unique([tenantId, invoiceNo])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  UNPAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model SmsLog {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  to        String
+  message   String
+  module    String
+  status    String
+  messageId String?
+  cost      String?
+  createdAt DateTime @default(now())
+}

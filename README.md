@@ -1,8 +1,3 @@
-<img width="1364" height="727" alt="image" src="https://github.com/user-attachments/assets/2d1d0780-1e43-4d50-8f45-9369a48008d5" />
-
-
-
-
 Biashara OS
 
 **A modern Kenyan Business Operating System**  
@@ -21,6 +16,9 @@ Full-stack platform for SMEs with integrated payments, tax compliance, and commu
 - **Vite + React** frontend (deployed on Vercel)
 - **Prisma ORM** for type-safe database access
 
+
+  
+
  Tech Stack
 
 | Layer         | Technology                          |
@@ -31,6 +29,11 @@ Full-stack platform for SMEs with integrated payments, tax compliance, and commu
 | Cache         | Redis                               |
 | Container     | Docker + Docker Compose             |
 | Deployment    | Vercel (Frontend) + Docker (Backend)|
+
+
+
+
+
 
 Quick Start (Local Development)
 
@@ -47,16 +50,10 @@ cd frontend
 npm install
 npm run dev -- --host
 
-Project Structure
-biashara-os/
-├── backend/          # Node.js + Prisma API
-├── frontend/         # Vite + React frontend
-├── nginx/            # Nginx configuration
-├── prisma/           # Database schema & migrations
-├── docker-compose.yml
-├── Dockerfile
-├── .env.example
-└── README.md
+
+
+
+
 
 Environment Variables
 JWT_SECRET=biashara-super-secret-key-change-in-production-32chars
@@ -71,8 +68,23 @@ MPESA_SHORTCODE=174379
 MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
  ... add other keys (ETIMS, Africastalking, WhatsApp, etc.)
 
+
+
+
+
+
+
+
 Frontend .env:
 API_URL=http://localhost:3001
+
+
+
+
+
+
+
+
 
 Docker Commands
   Start all services
@@ -94,6 +106,15 @@ Deployment
 Frontend → Vercel
 Backend → Recommended: Railway, Render, or any VPS with Docker
 
+
+
+
+
+
+
+
+
+
 Contributing
 Fork the repo
 Create your feature branch (git checkout -b feature/amazing-feature)
@@ -101,8 +122,14 @@ Commit your changes (git commit -m 'Add amazing feature')
 Push to the branch (git push origin feature/amazing-feature)
 Open a Pull Request
 
+
+
+
+
 License
 MIT License — see LICENSE for details.
+
+
 
 Made with love  for Kenyan businesses
 

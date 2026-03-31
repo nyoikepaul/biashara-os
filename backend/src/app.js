@@ -30,6 +30,11 @@ app.use('/api/rentals', authenticate, require('./routes/rental'));
 app.use('/api/schools', authenticate, require('./routes/school'));
 app.use('/api/invoices', authenticate, require('./routes/invoice'));
 app.use('/api/dashboard', authenticate, require('./routes/dashboard'));
+app.use('/api/customers', authenticate, require('./routes/customers'));
+app.use('/api/expenses', authenticate, require('./routes/expenses'));
+app.use('/api/suppliers', authenticate, require('./routes/suppliers'));
+app.use('/api/reports', authenticate, require('./routes/reports'));
+app.use('/api/subscription', authenticate, require('./routes/subscription'));
 app.use(errorHandler);
 
 cron.schedule('0 9 25 * *', () => { logger.info('Running rent reminders'); sendRentReminders(); });

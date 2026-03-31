@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Tenant {
-  id                String     @id @default(uuid())
+  id                String        @id @default(uuid())
   name              String
-  slug              String     @unique
-  plan              Plan       @default(STARTER)
+  slug              String        @unique
+  plan              Plan          @default(STARTER)
   kraPin            String?
   phone             String
   email             String
@@ -19,8 +19,8 @@ model Tenant {
   mpesaShortcode    String?
   mpesaPasskey      String?
   etimsDeviceSerial String?
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
   users             User[]
   products          Product[]
   sales             Sale[]
@@ -30,6 +30,11 @@ model Tenant {
   students          Student[]
   invoices          Invoice[]
   smsLogs           SmsLog[]
+  customers         Customer[]
+  expenses          Expense[]
+  suppliers         Supplier[]
+  subscription      Subscription?
+  auditLogs         AuditLog[]
 }
 
 enum Plan {
@@ -49,7 +54,6 @@ model User {
   role      UserRole @default(STAFF)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
-
   @@unique([tenantId, email])
 }
 
@@ -79,7 +83,6 @@ model Product {
   updatedAt      DateTime        @updatedAt
   saleItems      SaleItem[]
   stockMovements StockMovement[]
-
   @@unique([tenantId, sku])
 }
 
@@ -87,6 +90,8 @@ model Sale {
   id             String        @id @default(uuid())
   tenantId       String
   tenant         Tenant        @relation(fields: [tenantId], references: [id])
+  customerId     String?
+  customer       Customer?     @relation(fields: [customerId], references: [id])
   receiptNo      String
   customerPhone  String?
   customerName   String?
@@ -101,7 +106,6 @@ model Sale {
   status         SaleStatus    @default(COMPLETED)
   createdAt      DateTime      @default(now())
   items          SaleItem[]
-
   @@unique([tenantId, receiptNo])
 }
 
@@ -150,9 +154,9 @@ enum MovementType {
 }
 
 model Employee {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
   tenantId    String
-  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
   employeeNo  String
   name        String
   idNumber    String
@@ -162,14 +166,14 @@ model Employee {
   department  String
   designation String
   basicSalary Float
-  allowances  Json      @default("{}")
+  allowances  Json         @default("{}")
   mpesaPhone  String?
-  paymentMode String    @default("MPESA")
+  paymentMode String       @default("MPESA")
   joinDate    DateTime
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
   payslips    Payslip[]
-
+  attendance  Attendance[]
   @@unique([tenantId, employeeNo])
 }
 
@@ -188,7 +192,6 @@ model Payroll {
   processedAt DateTime?
   createdAt   DateTime      @default(now())
   payslips    Payslip[]
-
   @@unique([tenantId, month, year])
 }
 
@@ -301,7 +304,6 @@ model Student {
   isActive      Boolean      @default(true)
   createdAt     DateTime     @default(now())
   feePayments   FeePayment[]
-
   @@unique([tenantId, admNo])
 }
 
@@ -349,7 +351,6 @@ model Invoice {
   status      InvoiceStatus @default(UNPAID)
   etimsRef    String?
   createdAt   DateTime      @default(now())
-
   @@unique([tenantId, invoiceNo])
 }
 
@@ -372,4 +373,179 @@ model SmsLog {
   messageId String?
   cost      String?
   createdAt DateTime @default(now())
+}
+
+model Customer {
+  id             String       @id @default(uuid())
+  tenantId       String
+  tenant         Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name           String
+  phone          String
+  email          String?
+  idNumber       String?
+  loyaltyPoints  Int          @default(0)
+  creditLimit    Float        @default(0)
+  creditBalance  Float        @default(0)
+  totalPurchases Float        @default(0)
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  sales          Sale[]
+  creditSales    CreditSale[]
+  @@unique([tenantId, phone])
+}
+
+model CreditSale {
+  id         String          @id @default(uuid())
+  tenantId   String
+  customerId String
+  customer   Customer        @relation(fields: [customerId], references: [id])
+  saleId     String?
+  amount     Float
+  amountPaid Float           @default(0)
+  balance    Float
+  dueDate    DateTime?
+  status     CreditStatus    @default(PENDING)
+  notes      String?
+  createdAt  DateTime        @default(now())
+  payments   CreditPayment[]
+}
+
+model CreditPayment {
+  id           String     @id @default(uuid())
+  creditSaleId String
+  creditSale   CreditSale @relation(fields: [creditSaleId], references: [id])
+  amount       Float
+  mpesaRef     String?
+  paidAt       DateTime   @default(now())
+}
+
+enum CreditStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  WRITTEN_OFF
+}
+
+model Expense {
+  id           String   @id @default(uuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  category     String
+  description  String
+  amount       Float
+  paymentMode  String   @default("CASH")
+  vendor       String?
+  receiptUrl   String?
+  isRecurring  Boolean  @default(false)
+  recurringDay Int?
+  createdAt    DateTime @default(now())
+}
+
+model Supplier {
+  id        String          @id @default(uuid())
+  tenantId  String
+  tenant    Tenant          @relation(fields: [tenantId], references: [id])
+  name      String
+  phone     String
+  email     String?
+  address   String?
+  kraPin    String?
+  balance   Float           @default(0)
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  orders    PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id          String    @id @default(uuid())
+  tenantId    String
+  supplierId  String
+  supplier    Supplier  @relation(fields: [supplierId], references: [id])
+  orderNo     String
+  status      POStatus  @default(DRAFT)
+  subtotal    Float
+  vatAmount   Float     @default(0)
+  total       Float
+  amountPaid  Float     @default(0)
+  balance     Float     @default(0)
+  deliveredAt DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  items       POItem[]
+  @@unique([tenantId, orderNo])
+}
+
+model POItem {
+  id              String        @id @default(uuid())
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  productName     String
+  qty             Int
+  unitCost        Float
+  subtotal        Float
+}
+
+enum POStatus {
+  DRAFT
+  ORDERED
+  PARTIAL
+  RECEIVED
+  CANCELLED
+}
+
+model Attendance {
+  id         String           @id @default(uuid())
+  tenantId   String
+  employeeId String
+  employee   Employee         @relation(fields: [employeeId], references: [id])
+  date       DateTime         @db.Date
+  clockIn    DateTime?
+  clockOut   DateTime?
+  status     AttendanceStatus @default(PRESENT)
+  notes      String?
+  @@unique([employeeId, date])
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  HALF_DAY
+  LEAVE
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  userId    String
+  action    String
+  entity    String
+  entityId  String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id                 String    @id @default(uuid())
+  tenantId           String    @unique
+  tenant             Tenant    @relation(fields: [tenantId], references: [id])
+  plan               Plan
+  status             SubStatus @default(TRIAL)
+  trialEndsAt        DateTime
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  mpesaRef           String?
+  autoRenew          Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+enum SubStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  SUSPENDED
 }

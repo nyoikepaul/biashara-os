@@ -78,6 +78,8 @@ MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
 
 
 **Frontend .env:**
+
+
   API_URL=http://localhost:3001
 
 
@@ -89,6 +91,9 @@ MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
 
 
 **Docker Commands**
+
+
+
   Start all services
 docker compose up --build -d
 
@@ -105,6 +110,8 @@ docker compose down
 docker compose up --build -d
 
 **Deployment**
+
+
   Frontend → Vercel
 Backend → Recommended: Railway, Render, or any VPS with Docker
 
@@ -118,6 +125,9 @@ Backend → Recommended: Railway, Render, or any VPS with Docker
 
 
 **Contributing**
+
+
+
   Fork the repo
 Create your feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
@@ -129,6 +139,8 @@ Open a Pull Request
 
 
 **License**
+
+
   MIT License — see LICENSE for details.
 
 

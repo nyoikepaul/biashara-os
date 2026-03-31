@@ -19,7 +19,7 @@ Full-stack platform for SMEs with integrated payments, tax compliance, and commu
 
   
 
- Tech Stack
+ **Tech Stack**
 
 | Layer         | Technology                          |
 |---------------|-------------------------------------|
@@ -35,7 +35,7 @@ Full-stack platform for SMEs with integrated payments, tax compliance, and commu
 
 
 
-Quick Start (Local Development)
+**Quick Start (Local Development)**
 
  Clone the repository
 bash
@@ -55,7 +55,7 @@ npm run dev -- --host
 
 
 
-Environment Variables
+**Environment Variables**
 JWT_SECRET=biashara-super-secret-key-change-in-production-32chars
 
 API_URL=http://localhost:3001
@@ -75,7 +75,7 @@ MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
 
 
 
-Frontend .env:
+**Frontend .env:**
 API_URL=http://localhost:3001
 
 
@@ -86,7 +86,7 @@ API_URL=http://localhost:3001
 
 
 
-Docker Commands
+**Docker Commands**
   Start all services
 docker compose up --build -d
 
@@ -102,7 +102,7 @@ docker compose down
  Full rebuild
 docker compose up --build -d
 
-Deployment
+**Deployment**
 Frontend → Vercel
 Backend → Recommended: Railway, Render, or any VPS with Docker
 
@@ -115,7 +115,7 @@ Backend → Recommended: Railway, Render, or any VPS with Docker
 
 
 
-Contributing
+**Contributing**
 Fork the repo
 Create your feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
@@ -126,13 +126,15 @@ Open a Pull Request
 
 
 
-License
+**License**
 MIT License — see LICENSE for details.
 
 
 
 Made with love  for Kenyan businesses
 
+
+<img width="1364" height="727" alt="image" src="https://github.com/user-attachments/assets/2d1d0780-1e43-4d50-8f45-9369a48008d5" />
 
 
 

@@ -1,16 +1,17 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || '/api'
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://api.biashara.co.ke' : 'http://localhost:3001') + '/api',
+  baseURL: API_URL,
   timeout: 30000,
-  withCredentials: false,
 })
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) config.headers.Authorization = 'Bearer ' + token
   return config
-}, err => Promise.reject(err))
+})
 
 api.interceptors.response.use(
   res => res.data,
@@ -19,8 +20,7 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       window.location.href = '/login'
     }
-    const message = err.response?.data?.error || err.message || 'Request failed'
-    return Promise.reject({ error: message, status: err.response?.status })
+    return Promise.reject(err.response?.data || { error: err.message })
   }
 )
 

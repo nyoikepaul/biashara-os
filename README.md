@@ -55,7 +55,7 @@ npm run dev -- --host
 
 
 
-**Environment Variables**
+**Environment Variables()**
 JWT_SECRET=biashara-super-secret-key-change-in-production-32chars
 
 API_URL=http://localhost:3001

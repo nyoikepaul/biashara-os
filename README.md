@@ -55,8 +55,10 @@ npm run dev -- --host
 
 
 
-**Environment Variables()**
-JWT_SECRET=biashara-super-secret-key-change-in-production-32chars
+**Environment Variables**
+
+
+ JWT_SECRET=biashara-super-secret-key-change-in-production-32chars
 
 API_URL=http://localhost:3001
 FRONTEND_URL=https://biashara-os-ten.vercel.app
@@ -76,7 +78,7 @@ MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
 
 
 **Frontend .env:**
-API_URL=http://localhost:3001
+  API_URL=http://localhost:3001
 
 
 
@@ -103,7 +105,7 @@ docker compose down
 docker compose up --build -d
 
 **Deployment**
-Frontend → Vercel
+  Frontend → Vercel
 Backend → Recommended: Railway, Render, or any VPS with Docker
 
 
@@ -116,7 +118,7 @@ Backend → Recommended: Railway, Render, or any VPS with Docker
 
 
 **Contributing**
-Fork the repo
+  Fork the repo
 Create your feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
 Push to the branch (git push origin feature/amazing-feature)
@@ -127,7 +129,7 @@ Open a Pull Request
 
 
 **License**
-MIT License — see LICENSE for details.
+  MIT License — see LICENSE for details.
 
 
 

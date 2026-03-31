@@ -1,6 +1,8 @@
 <img width="1364" height="727" alt="image" src="https://github.com/user-attachments/assets/2d1d0780-1e43-4d50-8f45-9369a48008d5" />
 
 
+
+
 Biashara OS
 
 **A modern Kenyan Business Operating System**  
@@ -67,25 +69,25 @@ MPESA_CONSUMER_KEY=your_consumer_key
 MPESA_CONSUMER_SECRET=your_consumer_secret
 MPESA_SHORTCODE=174379
 MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
-# ... add other keys (ETIMS, Africastalking, WhatsApp, etc.)
+ ... add other keys (ETIMS, Africastalking, WhatsApp, etc.)
 
 Frontend .env:
 API_URL=http://localhost:3001
 
 Docker Commands
- # Start all services
+  Start all services
 docker compose up --build -d
 
-# View API logs
+ View API logs
 docker compose logs -f api
 
-# Restart only API
+ Restart only API
 docker compose restart api
 
-# Stop everything
+ Stop everything
 docker compose down
 
-# Full rebuild
+ Full rebuild
 docker compose up --build -d
 
 Deployment
@@ -102,7 +104,7 @@ Open a Pull Request
 License
 MIT License — see LICENSE for details.
 
-Made with  for Kenyan businesses
+Made with love  for Kenyan businesses
 
 
 

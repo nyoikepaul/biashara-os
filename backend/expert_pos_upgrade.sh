@@ -1,3 +1,15 @@
+#!/bin/bash
+
+export PGPASSWORD='postgres'
+PROJECT_ROOT="$HOME/biashara-os"
+FRONTEND_FILE="$PROJECT_ROOT/frontend/src/pages/Retail.tsx"
+
+# Fetch the real ID for the code injection
+REAL_TENANT_ID=$(psql -U postgres -d biashara_db -h localhost -t -A -c "SELECT id FROM \"Tenant\" WHERE slug='biashara-hq' LIMIT 1;")
+
+echo "🎨 Refining UI and Logic for BiasharaOS Retail..."
+
+cat << REACT_EOF > "$FRONTEND_FILE"
 import React, { useState, useEffect } from 'react';
 
 export default function RetailPOS() {
@@ -7,7 +19,7 @@ export default function RetailPOS() {
 
   useEffect(() => {
     // Dynamic fetch using the verified Tenant ID
-    fetch(`/api/products?tenantId=b9b69bb0-f586-4b93-b9a4-601a26abd5e0`)
+    fetch(\`/api/products?tenantId=${REAL_TENANT_ID}\`)
       .then(res => res.json())
       .then(data => setProducts(Array.isArray(data) ? data : []))
       .catch(err => console.error("Sync Error:", err));
@@ -107,3 +119,11 @@ export default function RetailPOS() {
     </div>
   );
 }
+REACT_EOF
+
+echo "🚀 Pushing expert-grade POS to GitHub..."
+cd "$PROJECT_ROOT"
+git add .
+git commit -m "feat(pos): expert UI layout with dynamic tenant context"
+git push origin main
+unset PGPASSWORD

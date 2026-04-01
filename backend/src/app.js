@@ -1,10 +1,10 @@
+const cors = require('cors');
 const crmRoutes = require('./routes/crm');
 require('dotenv').config();
 // Fix BigInt serialization for Prisma (common in WSL + Postgres)
 BigInt.prototype.toJSON = function() { return Number(this); };
 
 const express = require('express');
-const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -16,12 +16,12 @@ const { sendRentReminders } = require('./modules/rentals/rentReminders');
 const { sendFeeReminders } = require('./modules/schools/feeReminders');
 
 const app = express();
+app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 app.use(express.json());
 const apiRoutes = require('./routes/apiRoutes');
 app.set('trust proxy', 1 /* trust first proxy */);
 app.use('/api', apiRoutes);
 app.use(helmet());
-app.use(cors({ origin: ['https://frontend-three-peach-18.vercel.app', 'http://localhost:5173'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'], credentials: true }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(rateLimit({ windowMs: 15*60*1000, max: 500 }));

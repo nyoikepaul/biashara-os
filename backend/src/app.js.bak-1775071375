@@ -1,25 +1,37 @@
 const cors = require('cors');
 const retailRouter = require("./routes/retail");
 const crmRoutes = require('./routes/crm');
+const retailRouter = require("./routes/retail");
 require('dotenv').config();
 // Fix BigInt serialization for Prisma (common in WSL + Postgres)
 BigInt.prototype.toJSON = function() { return Number(this); };
 
 const express = require('express');
+const retailRouter = require("./routes/retail");
 const helmet = require('helmet');
+const retailRouter = require("./routes/retail");
 const morgan = require('morgan');
+const retailRouter = require("./routes/retail");
 const rateLimit = require('express-rate-limit');
+const retailRouter = require("./routes/retail");
 const cron = require('node-cron');
+const retailRouter = require("./routes/retail");
 const logger = require('./config/logger');
+const retailRouter = require("./routes/retail");
 const { errorHandler } = require('./middleware/errorHandler');
+const retailRouter = require("./routes/retail");
 const { authenticate } = require('./middleware/auth');
+const retailRouter = require("./routes/retail");
 const { sendRentReminders } = require('./modules/rentals/rentReminders');
+const retailRouter = require("./routes/retail");
 const { sendFeeReminders } = require('./modules/schools/feeReminders');
+const retailRouter = require("./routes/retail");
 
 const app = express();
 app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 app.use(express.json());
 const apiRoutes = require('./routes/apiRoutes');
+const retailRouter = require("./routes/retail");
 app.set('trust proxy', 1 /* trust first proxy */);
 app.use('/api', apiRoutes);
 app.use(helmet());

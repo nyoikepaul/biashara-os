@@ -1,3 +1,17 @@
+#!/bin/bash
+
+# Define paths (adjust if your frontend folder is named differently)
+PROJECT_ROOT="$HOME/biashara-os"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
+POS_FILE="$FRONTEND_DIR/src/pages/Retail.tsx"
+
+echo "🛒 Upgrading Retail & POS UI to Expert Mode..."
+
+# Ensure the frontend directory exists before writing
+mkdir -p "$(dirname "$POS_FILE")"
+
+# 1. Scaffold the High-Density, Dynamic POS Component
+cat << 'REACT_EOF' > "$POS_FILE"
 import React, { useState } from 'react';
 
 export default function RetailPOS() {
@@ -82,3 +96,16 @@ export default function RetailPOS() {
     </div>
   );
 }
+REACT_EOF
+
+echo "✅ Dynamic POS logic created."
+
+# 2. Push to GitHub to trigger Vercel deployment
+echo "🚀 Staging and pushing to GitHub..."
+cd "$PROJECT_ROOT" || exit
+git add .
+git commit -m "feat(retail): implement hybrid POS logic and high-density UI"
+git push origin main
+
+echo "🎉 Done! Vercel is building the new UI."
+echo "🔗 Check it live in a minute: https://frontend-three-peach-18.vercel.app/retail"

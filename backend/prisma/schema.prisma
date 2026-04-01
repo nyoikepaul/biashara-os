@@ -54,6 +54,7 @@ model User {
   role      UserRole @default(STAFF)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+
   @@unique([tenantId, email])
 }
 
@@ -62,63 +63,6 @@ enum UserRole {
   MANAGER
   STAFF
   ACCOUNTANT
-}
-
-model Product {
-  id             String          @id @default(uuid())
-  tenantId       String
-  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  name           String
-  sku            String
-  barcode        String?
-  category       String
-  buyingPrice    Float
-  sellingPrice   Float
-  vatRate        Float           @default(16)
-  stock          Int             @default(0)
-  lowStockAt     Int             @default(10)
-  unit           String          @default("pcs")
-  isActive       Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  saleItems      SaleItem[]
-  stockMovements StockMovement[]
-  @@unique([tenantId, sku])
-}
-
-model Sale {
-  id             String        @id @default(uuid())
-  tenantId       String
-  tenant         Tenant        @relation(fields: [tenantId], references: [id])
-  customerId     String?
-  customer       Customer?     @relation(fields: [customerId], references: [id])
-  receiptNo      String
-  customerPhone  String?
-  customerName   String?
-  subtotal       Float
-  vatAmount      Float
-  discount       Float         @default(0)
-  total          Float
-  paymentMethod  PaymentMethod
-  mpesaRef       String?
-  etimsQrCode    String?
-  etimsInvoiceNo String?
-  status         SaleStatus    @default(COMPLETED)
-  createdAt      DateTime      @default(now())
-  items          SaleItem[]
-  @@unique([tenantId, receiptNo])
-}
-
-model SaleItem {
-  id        String  @id @default(uuid())
-  saleId    String
-  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-  qty       Int
-  unitPrice Float
-  vatRate   Float
-  subtotal  Float
 }
 
 model StockMovement {
@@ -174,6 +118,7 @@ model Employee {
   createdAt   DateTime     @default(now())
   payslips    Payslip[]
   attendance  Attendance[]
+
   @@unique([tenantId, employeeNo])
 }
 
@@ -192,6 +137,7 @@ model Payroll {
   processedAt DateTime?
   createdAt   DateTime      @default(now())
   payslips    Payslip[]
+
   @@unique([tenantId, month, year])
 }
 
@@ -304,6 +250,7 @@ model Student {
   isActive      Boolean      @default(true)
   createdAt     DateTime     @default(now())
   feePayments   FeePayment[]
+
   @@unique([tenantId, admNo])
 }
 
@@ -351,6 +298,7 @@ model Invoice {
   status      InvoiceStatus @default(UNPAID)
   etimsRef    String?
   createdAt   DateTime      @default(now())
+
   @@unique([tenantId, invoiceNo])
 }
 
@@ -391,6 +339,7 @@ model Customer {
   createdAt      DateTime     @default(now())
   sales          Sale[]
   creditSales    CreditSale[]
+
   @@unique([tenantId, phone])
 }
 
@@ -473,6 +422,7 @@ model PurchaseOrder {
   notes       String?
   createdAt   DateTime  @default(now())
   items       POItem[]
+
   @@unique([tenantId, orderNo])
 }
 
@@ -504,6 +454,7 @@ model Attendance {
   clockOut   DateTime?
   status     AttendanceStatus @default(PRESENT)
   notes      String?
+
   @@unique([employeeId, date])
 }
 
@@ -548,4 +499,49 @@ enum SubStatus {
   PAST_DUE
   CANCELLED
   SUSPENDED
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  name           String
+  price          Float
+  sku            String?         @unique
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  tenantId       String?
+  tenant         Tenant?         @relation(fields: [tenantId], references: [id])
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
+}
+
+model Sale {
+  id            String     @id @default(cuid())
+  total         Float
+  customerId    String?
+  paymentMethod String
+  status        String
+  createdAt     DateTime   @default(now())
+  tenantId      String?
+  tenant        Tenant?    @relation(fields: [tenantId], references: [id])
+  customer      Customer?  @relation(fields: [customerId], references: [id])
+  items         SaleItem[]
+  etimsLog      EtimsLog?
+}
+
+model SaleItem {
+  id        String  @id @default(cuid())
+  saleId    String
+  productId String
+  quantity  Int
+  price     Float
+  sale      Sale    @relation(fields: [saleId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model EtimsLog {
+  id     String  @id @default(cuid())
+  saleId String  @unique
+  status String
+  cuin   String?
+  sale   Sale    @relation(fields: [saleId], references: [id])
 }

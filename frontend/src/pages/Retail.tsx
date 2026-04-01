@@ -7,7 +7,7 @@ export default function RetailPOS() {
 
   useEffect(() => {
     // Dynamic fetch using the verified Tenant ID
-    fetch(`/api/products?tenantId=b9b69bb0-f586-4b93-b9a4-601a26abd5e0`)
+    fetch(`https://backend-blond-mu-95.vercel.app/api/products?tenantId=b9b69bb0-f586-4b93-b9a4-601a26abd5e0`)
       .then(res => res.json())
       .then(data => setProducts(Array.isArray(data) ? data : []))
       .catch(err => console.error("Sync Error:", err));

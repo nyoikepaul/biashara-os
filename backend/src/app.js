@@ -16,6 +16,7 @@ const { sendRentReminders } = require('./modules/rentals/rentReminders');
 const { sendFeeReminders } = require('./modules/schools/feeReminders');
 
 const app = express();
+app.use(express.json());
 const apiRoutes = require('./routes/apiRoutes');
 app.set('trust proxy', 1 /* trust first proxy */);
 app.use('/api', apiRoutes);

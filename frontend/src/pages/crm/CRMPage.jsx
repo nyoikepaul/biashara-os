@@ -10,7 +10,9 @@ export default function CRMPage() {
   const [tab, setTab] = useState('customers')
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
  
   const load = useCallback(async () => {
     setLoading(true)
@@ -33,7 +35,7 @@ export default function CRMPage() {
         subtitle="Manage your crm workflows"
         actions={<>
           <button onClick={load} className="btn-secondary text-sm flex items-center gap-2"><RefreshCw size={14}/>Refresh</button>
-          <button className="btn-primary text-sm flex items-center gap-2"><Plus size={14}/>Add New</button>
+          <button className="btn-primary text-sm flex items-center gap-2" onClick={() => setIsModalOpen(true)} onClick={() => setIsModalOpen(true)}><Plus size={14}/>Add New</button>
         </>}
       />
  
@@ -50,7 +52,7 @@ export default function CRMPage() {
         {loading ? (
           <div className="flex justify-center py-16"><Spinner size={28}/></div>
         ) : data.length === 0 ? (
-          <EmptyState icon={TrendingUp} title="No crm records yet" subtitle="Get started by adding your first record" action={<button className="btn-primary btn-sm">+ Add CRM</button>} />
+          <EmptyState icon={TrendingUp} title="No crm records yet" subtitle="Get started by adding your first record" action={<button className="btn-primary btn-sm" onClick={() => setIsModalOpen(true)}>+ Add CRM</button>} />
         ) : (
           <div className="p-5">
             <p className="text-sm text-gray-500">{data.length} records found</p>

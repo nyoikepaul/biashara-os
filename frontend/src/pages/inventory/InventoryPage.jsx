@@ -10,6 +10,7 @@ export default function InventoryPage() {
   const [tab, setTab] = useState('products')
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('')
  
   const load = useCallback(async () => {
@@ -33,7 +34,7 @@ export default function InventoryPage() {
         subtitle="Manage your inventory workflows"
         actions={<>
           <button onClick={load} className="btn-secondary text-sm flex items-center gap-2"><RefreshCw size={14}/>Refresh</button>
-          <button className="btn-primary text-sm flex items-center gap-2"><Plus size={14}/>Add New</button>
+          <button className="btn-primary text-sm flex items-center gap-2" onClick={() => setIsModalOpen(true)}><Plus size={14}/>Add New</button>
         </>}
       />
  
@@ -50,7 +51,7 @@ export default function InventoryPage() {
         {loading ? (
           <div className="flex justify-center py-16"><Spinner size={28}/></div>
         ) : data.length === 0 ? (
-          <EmptyState icon={Package} title="No inventory records yet" subtitle="Get started by adding your first record" action={<button className="btn-primary btn-sm">+ Add Inventory</button>} />
+          <EmptyState icon={Package} title="No inventory records yet" subtitle="Get started by adding your first record" action={<button className="btn-primary btn-sm" onClick={() => setIsModalOpen(true)}>+ Add Inventory</button>} />
         ) : (
           <div className="p-5">
             <p className="text-sm text-gray-500">{data.length} records found</p>

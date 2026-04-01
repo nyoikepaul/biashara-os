@@ -1,3 +1,4 @@
+const crmRoutes = require('./routes/crm');
 require('dotenv').config();
 // Fix BigInt serialization for Prisma (common in WSL + Postgres)
 BigInt.prototype.toJSON = function() { return Number(this); };
@@ -15,14 +16,18 @@ const { sendRentReminders } = require('./modules/rentals/rentReminders');
 const { sendFeeReminders } = require('./modules/schools/feeReminders');
 
 const app = express();
+const apiRoutes = require('./routes/apiRoutes');
+app.set('trust proxy', 1 /* trust first proxy */);
+app.use('/api', apiRoutes);
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: ['https://frontend-three-peach-18.vercel.app', 'http://localhost:5173'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'], credentials: true }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(rateLimit({ windowMs: 15*60*1000, max: 500 }));
 
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'BiasharaOS', timestamp: new Date() }));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/crm', crmRoutes);
 app.use('/api/mpesa', require('./routes/mpesa'));
 app.use('/api/retail', authenticate, require('./routes/retail'));
 app.use('/api/payroll', authenticate, require('./routes/payroll'));

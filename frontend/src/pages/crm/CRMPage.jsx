@@ -12,7 +12,6 @@ export default function CRMPage() {
   const [loading, setLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
  
   const load = useCallback(async () => {
     setLoading(true)

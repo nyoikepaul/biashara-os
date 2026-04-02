@@ -127,8 +127,8 @@ router.get('/reports/summary', async (req, res) => {
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
- 
-    const [todaySales, monthSales, lowStock] = await Promise.all([
+
+    const [todaySales, monthSales, products] = await Promise.all([
       prisma.sale.aggregate({
         where: { tenantId, createdAt: { gte: todayStart }, status: 'COMPLETED' },
         _sum: { total: true }, _count: true
@@ -142,20 +142,20 @@ router.get('/reports/summary', async (req, res) => {
         select: { id: true, name: true, sku: true, stock: true, lowStockAt: true }
       })
     ]);
- 
-    const lowStockItems = lowStock.filter(p => (p.stock || 0) <= (p.lowStockAt || 10));
- 
+
     res.json({
       success: true,
       data: {
         today: { revenue: todaySales._sum.total || 0, transactions: todaySales._count || 0 },
         month: { revenue: monthSales._sum.total || 0, transactions: monthSales._count || 0 },
-        lowStock: lowStockItems
+        lowStock: products.filter(p => (p.stock || 0) <= (p.lowStockAt || 10))
       }
     });
-  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+  } catch (err) {
+    console.error('Summary error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
-
 
 router.get('/sales', async (req, res) => {
   try {

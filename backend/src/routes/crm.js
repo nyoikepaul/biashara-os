@@ -11,4 +11,45 @@ router.get('/customers', (req, res) => {
   ]);
 });
 
+
+router.get('/reports/sales', async (req, res) => {
+  try {
+    const { days = 30 } = req.query;
+    const tenantId = req.tenantId;
+    const since = new Date(Date.now() - parseInt(days) * 86400000);
+
+    const [byPaymentMethod, topProducts] = await Promise.all([
+      prisma.sale.groupBy({
+        by: ['paymentMethod'],
+        where: { tenantId, createdAt: { gte: since }, status: 'COMPLETED' },
+        _sum: { total: true }, _count: true
+      }),
+      prisma.saleItem.groupBy({
+        by: ['productId'],
+        where: { sale: { tenantId, createdAt: { gte: since }, status: 'COMPLETED' } },
+        _sum: { subtotal: true, qty: true },
+        orderBy: { _sum: { subtotal: 'desc' } },
+        take: 10
+      })
+    ]);
+
+    const productIds = topProducts.map(p => p.productId);
+    const productDetails = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, name: true, sku: true }
+    });
+    const productMap = Object.fromEntries(productDetails.map(p => [p.id, p]));
+    const topProductsMapped = topProducts.map(p => ({
+      ...productMap[p.productId],
+      revenue: p._sum.subtotal || 0,
+      qty_sold: p._sum.qty || 0
+    }));
+
+    res.json({ success: true, data: { daily: [], byPaymentMethod, topProducts: topProductsMapped } });
+  } catch (err) {
+    console.error('CRM reports error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;

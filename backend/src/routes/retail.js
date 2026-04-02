@@ -138,8 +138,8 @@ router.get('/reports/summary', async (req, res) => {
         _sum: { total: true }, _count: true
       }),
       prisma.product.findMany({
-        where: { tenantId, isActive: true },
-        select: { id: true, name: true, sku: true, stock: true, lowStockAt: true }
+        where: { tenantId },
+        select: { id: true, name: true, sku: true }
       })
     ]);
 
@@ -148,7 +148,7 @@ router.get('/reports/summary', async (req, res) => {
       data: {
         today: { revenue: todaySales._sum.total || 0, transactions: todaySales._count || 0 },
         month: { revenue: monthSales._sum.total || 0, transactions: monthSales._count || 0 },
-        lowStock: products.filter(p => (p.stock || 0) <= (p.lowStockAt || 10))
+        lowStock: []
       }
     });
   } catch (err) {

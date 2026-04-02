@@ -156,4 +156,18 @@ router.get('/reports/summary', async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
+
+router.get('/sales', async (req, res) => {
+  try {
+    const { page=1, limit=20, from, to } = req.query;
+    const where = { tenantId: req.tenantId };
+    if (from && to) where.createdAt = { gte: new Date(from), lte: new Date(to) };
+    const [sales, total] = await Promise.all([
+      prisma.sale.findMany({ where, include: { items: { include: { product: true } } }, orderBy: { createdAt: 'desc' }, take: parseInt(limit), skip: (parseInt(page)-1)*parseInt(limit) }),
+      prisma.sale.count({ where })
+    ]);
+    res.json({ success: true, data: sales, total });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
 module.exports = router;

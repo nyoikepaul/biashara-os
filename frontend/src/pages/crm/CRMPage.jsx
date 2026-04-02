@@ -34,7 +34,7 @@ export default function CRMPage() {
         subtitle="Manage your crm workflows"
         actions={<>
           <button onClick={load} className="btn-secondary text-sm flex items-center gap-2"><RefreshCw size={14}/>Refresh</button>
-          <button className="btn-primary text-sm flex items-center gap-2" onClick={() => setIsModalOpen(true)} onClick={() => setIsModalOpen(true)}><Plus size={14}/>Add New</button>
+          <button className="btn-primary text-sm flex items-center gap-2" onClick={() => setIsModalOpen(true)}><Plus size={14}/>Add New</button>
         </>}
       />
  

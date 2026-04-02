@@ -119,4 +119,41 @@ router.post('/sales/:id/refund', async (req, res) => {
   } catch (err) { res.status(500).json({ success: false, error: err.message }); }
 });
 
+
+// GET /api/retail/reports/summary
+router.get('/reports/summary', async (req, res) => {
+  try {
+    const tenantId = req.tenantId;
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+ 
+    const [todaySales, monthSales, lowStock] = await Promise.all([
+      prisma.sale.aggregate({
+        where: { tenantId, createdAt: { gte: todayStart }, status: 'COMPLETED' },
+        _sum: { total: true }, _count: true
+      }),
+      prisma.sale.aggregate({
+        where: { tenantId, createdAt: { gte: monthStart }, status: 'COMPLETED' },
+        _sum: { total: true }, _count: true
+      }),
+      prisma.product.findMany({
+        where: { tenantId, isActive: true },
+        select: { id: true, name: true, sku: true, stock: true, lowStockAt: true }
+      })
+    ]);
+ 
+    const lowStockItems = lowStock.filter(p => (p.stock || 0) <= (p.lowStockAt || 10));
+ 
+    res.json({
+      success: true,
+      data: {
+        today: { revenue: todaySales._sum.total || 0, transactions: todaySales._count || 0 },
+        month: { revenue: monthSales._sum.total || 0, transactions: monthSales._count || 0 },
+        lowStock: lowStockItems
+      }
+    });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
 module.exports = router;

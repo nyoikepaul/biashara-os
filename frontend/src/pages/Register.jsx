@@ -83,7 +83,7 @@ export default function Register() {
       })
     } catch (err) {
       setModal({ isOpen: false })
-      const msg = err.error || 'Registration failed'
+      const msg = err.error || err.message || (typeof err === 'string' ? err : 'Registration failed — check your connection')
       if (msg.includes('already')) {
         setErrors({ email: 'This email is already registered' })
         setModal({

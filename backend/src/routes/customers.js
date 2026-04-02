@@ -122,4 +122,49 @@ router.get('/credit/summary', async (req, res) => {
   res.json({ success: true, data: { totalOutstanding: total._sum.balance || 0, totalDebtors: total._count, overdueAmount: overdue._sum.balance || 0, overdueCount: overdue._count, collectedThisMonth: thisMonth._sum.amount || 0 } });
 });
 
+
+router.get('/reports/sales', async (req, res) => {
+  try {
+    const { days = 30 } = req.query;
+    const tenantId = req.tenantId;
+    const since = new Date(Date.now() - parseInt(days) * 86400000);
+ 
+    const [daily, topProducts, byPaymentMethod] = await Promise.all([
+      prisma.$queryRaw`
+        SELECT DATE("createdAt") as date,
+               COUNT(*)::int as orders,
+               COALESCE(SUM(total), 0)::float as revenue
+        FROM "Sale"
+        WHERE "tenantId" = ${tenantId}
+          AND "createdAt" >= ${since}
+          AND status = 'COMPLETED'
+        GROUP BY DATE("createdAt")
+        ORDER BY date
+      `,
+      prisma.$queryRaw`
+        SELECT p.name, p.sku,
+               COALESCE(SUM(si.qty), 0)::int as qty_sold,
+               COALESCE(SUM(si.subtotal), 0)::float as revenue
+        FROM "SaleItem" si
+        JOIN "Product" p ON p.id = si."productId"
+        JOIN "Sale" s ON s.id = si."saleId"
+        WHERE s."tenantId" = ${tenantId}
+          AND s."createdAt" >= ${since}
+          AND s.status = 'COMPLETED'
+        GROUP BY p.id, p.name, p.sku
+        ORDER BY revenue DESC
+        LIMIT 10
+      `,
+      prisma.sale.groupBy({
+        by: ['paymentMethod'],
+        where: { tenantId, createdAt: { gte: since }, status: 'COMPLETED' },
+        _sum: { total: true },
+        _count: true
+      })
+    ]);
+ 
+    res.json({ success: true, data: { daily, topProducts, byPaymentMethod } });
+  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
+});
+
 module.exports = router;

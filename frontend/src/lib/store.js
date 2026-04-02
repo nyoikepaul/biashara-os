@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
+ 
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -8,9 +8,10 @@ export const useAuthStore = create(
       user: null,
       tenant: null,
       setAuth: (token, user, tenant) => {
-        localStorage.setItem('token', token)
+        if (token) localStorage.setItem('token', token)
         set({ token, user, tenant })
       },
+      updateTenant: (t) => set({ tenant: t }),
       logout: () => {
         localStorage.removeItem('token')
         set({ token: null, user: null, tenant: null })

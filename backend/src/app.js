@@ -1,3 +1,4 @@
+const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const retailRouter = require("./routes/retail");
 const crmRoutes = require('./routes/crm');
@@ -17,10 +18,11 @@ const { sendRentReminders } = require('./modules/rentals/rentReminders');
 const { sendFeeReminders } = require('./modules/schools/feeReminders');
 
 const app = express();
-app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(cors({   origin: ['https://frontend-three-peach-18.vercel.app', 'http://localhost:5173'],   credentials: true,   allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'] }));
 app.use(express.json());
 const apiRoutes = require('./routes/apiRoutes');
 app.set('trust proxy', 1 /* trust first proxy */);
+app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 app.use(helmet());
 app.use(morgan('dev'));

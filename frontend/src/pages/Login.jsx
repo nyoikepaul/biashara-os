@@ -42,7 +42,7 @@ function LoginForm({ onForgot }) {
       navigate('/')
     } catch (err) {
       setModal({ isOpen: false })
-      const msg = (err.error || err.message || 'Login failed').toLowerCase()
+      const msg = (err.error || err.message || err.toString() || 'Login failed').toLowerCase()
       if (msg.includes('credential') || msg.includes('password') || msg.includes('invalid')) {
         setErrors({ password: 'Incorrect email or password' })
         setBanner({ type: 'error', message: 'Login failed — please check your email and password.' })

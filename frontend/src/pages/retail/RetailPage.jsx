@@ -1074,8 +1074,8 @@ function RetailReports() {
     <div className="space-y-5">
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         {[
-          { label: "Today's Revenue", value: formatKES(summary?.today?.revenue), sub: summary?.today?.transactions + ' transactions', color: 'bg-blue-50' },
-          { label: "Month Revenue", value: formatKES(summary?.month?.revenue), sub: summary?.month?.transactions + ' transactions', color: 'bg-green-50' },
+          { label: "Today's Revenue", value: formatKES(summary?.today?.revenue || 0), sub: (summary?.today?.transactions || 0) + ' transactions', color: 'bg-blue-50' },
+          { label: "Month Revenue", value: formatKES(summary?.month?.revenue || 0), sub: (summary?.month?.transactions || 0) + ' transactions', color: 'bg-green-50' },
           { label: "Top Products", value: analytics?.topProducts?.length || 0, sub: 'Products sold this month', color: 'bg-purple-50' },
           { label: "Low Stock Items", value: summary?.lowStock?.length || 0, sub: 'Need reordering', color: 'bg-red-50' },
         ].map(({ label, value, sub, color }) => (

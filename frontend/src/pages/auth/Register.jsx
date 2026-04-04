@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Building2, Check, Loader2, User, Mail, Phone, Lock, MapPin, CreditCard } from 'lucide-react'
-import { useAuthStore } from '../lib/store'
-import { ValidationModal, ValidationBanner, FieldError } from '../components/ui/ValidationModal'
-import api from '../lib/api'
+import { useAuthStore } from '../../lib/store'
+import { ValidationModal, ValidationBanner, FieldError } from '../../components/ui/ValidationModal'
+import api from '../../lib/api'
 import toast from 'react-hot-toast'
 
 const PLANS = [

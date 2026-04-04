@@ -37,7 +37,7 @@ export const timeAgo = (d) => {
 export const getInitials = (name='') =>
   name.split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase() || 'U'
  
-export const formatPhone = (p='') => p.replace(/^0/,'+254').replace(/^+?254/,'+254')
+export const formatPhone = (p='') => p.replace(/^0/,'+254').replace(/^\+?254/,'+254')
  
 export const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t=setTimeout(()=>fn(...a),ms) } }
  

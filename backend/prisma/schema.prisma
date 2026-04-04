@@ -35,6 +35,7 @@ model Tenant {
   suppliers         Supplier[]
   subscription      Subscription?
   auditLogs         AuditLog[]
+  warehouses        Warehouse[]
 }
 
 enum Plan {
@@ -544,4 +545,29 @@ model EtimsLog {
   status String
   cuin   String?
   sale   Sale    @relation(fields: [saleId], references: [id])
+}
+
+model Warehouse {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  name       String
+  location   String?
+  isDefault  Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(uuid())
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  productName     String        @default("")
+  qty             Float
+  unitCost        Float
+  taxRate         Float         @default(0)
+  subtotal        Float
+  receivedQty     Float         @default(0)
 }

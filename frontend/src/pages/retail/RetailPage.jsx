@@ -1,3 +1,4 @@
+import { useAuthStore } from '../../lib/store'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
 import {
@@ -500,7 +501,7 @@ function POSTerminal() {
 // RECEIPT VIEW
 // ══════════════════════════════════════════════════════════════════════════════
 function ReceiptView({ receipt, onClose, onNewSale }) {
-  const { useAuthStore } = require('../../lib/store')
+  // store imported at top
   const { tenant } = useAuthStore()
  
   return (

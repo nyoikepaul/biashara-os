@@ -1,82 +1,56 @@
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns'
  
-export const formatKES = (amount, decimals = 0) => {
-  const n = Number(amount)
-  if (isNaN(n)) return 'KES 0'
-  return 'KES ' + n.toLocaleString('en-KE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+export const formatKES = (n, dec=0) => {
+  const v = Number(n)
+  if (isNaN(v)) return 'KES 0'
+  if (v >= 1000000) return 'KES ' + (v/1000000).toFixed(1) + 'M'
+  if (v >= 100000) return 'KES ' + (v/1000).toFixed(0) + 'K'
+  return 'KES ' + v.toLocaleString('en-KE',{minimumFractionDigits:dec,maximumFractionDigits:dec})
 }
  
-export const formatDate = (date, fmt = 'dd MMM yyyy') => {
-  if (!date) return '—'
-  try { return format(new Date(date), fmt) } catch { return '—' }
+export const formatKESFull = (n, dec=0) => {
+  const v = Number(n)
+  if (isNaN(v)) return 'KES 0'
+  return 'KES ' + v.toLocaleString('en-KE',{minimumFractionDigits:dec,maximumFractionDigits:dec})
 }
  
-export const formatDateTime = (date) => {
-  if (!date) return '—'
-  try { return format(new Date(date), 'dd MMM yyyy HH:mm') } catch { return '—' }
+export const formatDate = (d, fmt='dd MMM yyyy') => {
+  if (!d) return '—'
+  try { return format(new Date(d), fmt) } catch { return '—' }
 }
  
-export const timeAgo = (date) => {
-  if (!date) return '—'
+export const formatDateTime = (d) => {
+  if (!d) return '—'
+  try { return format(new Date(d), 'dd MMM yyyy · HH:mm') } catch { return '—' }
+}
+ 
+export const timeAgo = (d) => {
+  if (!d) return '—'
   try {
-    const d = new Date(date)
-    if (isToday(d)) return format(d, 'HH:mm') + ' today'
-    if (isYesterday(d)) return 'Yesterday'
-    return formatDistanceToNow(d, { addSuffix: true })
+    const dt = new Date(d)
+    if (isToday(dt)) return format(dt,'HH:mm')
+    if (isYesterday(dt)) return 'Yesterday'
+    return formatDistanceToNow(dt,{addSuffix:true})
   } catch { return '—' }
 }
  
-export const safe = (val, fallback = 0) => {
-  const n = Number(val)
-  return isNaN(n) ? fallback : n
-}
+export const getInitials = (name='') =>
+  name.split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase() || 'U'
  
-export const safeStr = (val, fallback = '—') => {
-  if (val === null || val === undefined || val === 'undefined' || val === 'null') return fallback
-  return String(val)
-}
+export const formatPhone = (p='') => p.replace(/^0/,'+254').replace(/^+?254/,'+254')
  
-export const statusBadge = (status) => {
-  const map = {
-    DRAFT:'gray', PENDING:'yellow', ACTIVE:'green', APPROVED:'green',
-    PAID:'green', COMPLETED:'green', DELIVERED:'green', WON:'green', RECEIVED:'green',
-    PARTIAL:'blue', PROCESSING:'blue', SENT:'blue', CONFIRMED:'blue',
-    UNPAID:'yellow', OVERDUE:'red', LATE:'red', ABSENT:'red',
-    CANCELLED:'gray', REJECTED:'red', LOST:'red', EXPIRED:'gray',
-    REFUNDED:'red', VOIDED:'gray',
-  }
-  return map[status] || 'gray'
-}
+export const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t=setTimeout(()=>fn(...a),ms) } }
  
-export const badgeClass = (status) => {
-  const color = statusBadge(status)
-  const map = {
-    gray:'bg-gray-100 text-gray-700', yellow:'bg-yellow-100 text-yellow-700',
-    green:'bg-green-100 text-green-700', blue:'bg-blue-100 text-blue-700',
-    red:'bg-red-100 text-red-700', purple:'bg-purple-100 text-purple-700',
-    orange:'bg-orange-100 text-orange-700',
-  }
-  return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ' + (map[color] || map.gray)
-}
+export const pct = (a, b) => b > 0 ? parseFloat(((a/b)*100).toFixed(1)) : 0
  
-export const getInitials = (name) =>
-  (name || 'U').split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase()
+export const statusColor = (s) => ({
+  COMPLETED:'green', PAID:'green', APPROVED:'green', ACTIVE:'green', DELIVERED:'green', RECEIVED:'green', WON:'green',
+  PENDING:'yellow', PARTIAL:'blue', PROCESSING:'blue', SENT:'blue', DRAFT:'gray',
+  OVERDUE:'red', LATE:'red', REJECTED:'red', CANCELLED:'gray', REFUNDED:'orange',
+  UNPAID:'yellow', ABSENT:'red', LOST:'red',
+}[s] || 'gray')
  
-export const debounce = (fn, delay) => {
-  let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay) }
+export const badgeClass = (s) => {
+  const c = statusColor(s)
+  return 'badge badge-' + c
 }
- 
-export const formatPhone = (phone) => {
-  if (!phone) return ''
-  return phone.replace(/^0/, '+254').replace(/^\+?254/, '+254')
-}
-export const statusColor = (status) => {
-  const colors = {
-    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    completed: 'bg-green-100 text-green-800 border-green-200',
-    cancelled: 'bg-red-100 text-red-800 border-red-200',
-    processing: 'bg-blue-100 text-blue-800 border-blue-200',
-    failed: 'bg-gray-100 text-gray-800 border-gray-200'
-  };
-  return colors[status?.toLowerCase()] || 'bg-gray-100 text-gray-800 border-gray-200';
-};

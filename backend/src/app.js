@@ -47,7 +47,7 @@ app.use('/api/crm', require('./routes/crm'));
 app.use('/api/mpesa', require('./routes/mpesa'));
 
 // Protected routes
-app.use('/api/inventory', require('./routes/retail'));
+app.use('/api/inventory', authenticate, require('./routes/inventory'));
 app.use('/api/retail', authenticate, require('./routes/retail'));
 app.use('/api/payroll', authenticate, require('./routes/payroll'));
 app.use('/api/rentals', authenticate, require('./routes/rental'));

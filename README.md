@@ -150,6 +150,7 @@ Made with love  for Kenyan businesses
 
 <img width="1366" height="606" alt="image" src="https://github.com/user-attachments/assets/dbebc77b-7fb4-48d3-8b18-6cd1d8298c19" />
 
+
 <img width="1366" height="724" alt="image" src="https://github.com/user-attachments/assets/c0728edd-ec1c-4957-8c3f-267057390ca3" />
 
 

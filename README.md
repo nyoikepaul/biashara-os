@@ -1,4 +1,4 @@
-# 🚀 BiasharaOS
+#  BiasharaOS
 <img width="1366" height="608" alt="image" src="https://github.com/user-attachments/assets/e500a1f0-b4cc-4c88-9124-f4cc74a6f7e5" />
 
 
@@ -10,24 +10,24 @@
 [![Dockerized](https://img.shields.io/badge/Infrastructure-Docker-2496ED?logo=docker&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## ✨ Core Features
+##  Core Features
 
-### 💳 FinTech & Billing
+###  FinTech & Billing
 * **M-Pesa Integration:** Fully integrated Daraja API supporting STK Push, C2B, and B2C transactions for automated reconciliation.
 * **KRA eTIMS Compliance:** Automated generation and push of electronic tax invoices directly to the Kenya Revenue Authority.
 
-### 📢 Communication & CRM
+###  Communication & CRM
 * **WhatsApp Business API:** Integrated messaging for instant customer engagement and automated notifications.
 * **Africastalking SMS & Voice:** Reliable SMS and voice infrastructure for alerts and OTPs.
 
-### 🔐 Security & Architecture
+###  Security & Architecture
 * **Role-Based Access Control (RBAC):** Secure JWT authentication with granular permissions for cashiers, managers, and admins.
 * **High-Performance Caching:** Redis implementation for optimized data retrieval and session management.
 * **Type-Safe ORM:** Prisma integration ensuring robust database schema management and query safety.
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer          | Technology                          |
 |----------------|-------------------------------------|

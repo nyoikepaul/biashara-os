@@ -1,5 +1,4 @@
 #  BiasharaOS
-<img width="1366" height="608" alt="image" src="https://github.com/user-attachments/assets/e500a1f0-b4cc-4c88-9124-f4cc74a6f7e5" />
 
 
 **A modern, multi-tenant Kenyan Business Operating System** A comprehensive, enterprise-grade platform built for SMEs, featuring seamless integrations for digital payments, statutory tax compliance, and omni-channel customer communication.
@@ -142,6 +141,7 @@ Open a Pull Request
 Made with love  for Kenyan businesses
 
 
+<img width="1366" height="608" alt="image" src="https://github.com/user-attachments/assets/e500a1f0-b4cc-4c88-9124-f4cc74a6f7e5" />
 
 
 

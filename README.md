@@ -1,7 +1,7 @@
 #  BiasharaOS
 
 
-**A modern, multi-tenant Kenyan Business Operating System** A comprehensive, enterprise-grade platform built for SMEs, featuring seamless integrations for digital payments, statutory tax compliance, and omni-channel customer communication.
+**A modern, multi-tenant Kenyan Business Operating System** A comprehensive, enterprise-grade platform built for SMEs, featuring seamless integrations for digital payments, statutory tax compliance, and omni-channel customer communication. 
 
 [![React & Vite](https://img.shields.io/badge/Frontend-React%20%7C%20Vite-blue?logo=react&logoColor=white)](#)
 [![Node.js & Express](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green?logo=nodedotjs&logoColor=white)](#)
@@ -38,7 +38,7 @@
 | **Deployment** | Vercel (Frontend) + Docker (Backend)|
 
 
-## 🚀 Quick Start (Local Development)
+##  Quick Start (Local Development)
 
 ### Prerequisites
 Ensure you have the following installed on your machine:

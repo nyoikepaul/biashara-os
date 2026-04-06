@@ -24,7 +24,7 @@
 * **High-Performance Caching:** Redis implementation for optimized data retrieval and session management.
 * **Type-Safe ORM:** Prisma integration ensuring robust database schema management and query safety.
 
----
+
 
 ##  Tech Stack
 

@@ -37,7 +37,6 @@
 | **Container** | Docker + Docker Compose             |
 | **Deployment** | Vercel (Frontend) + Docker (Backend)|
 
----
 
 ## 🚀 Quick Start (Local Development)
 

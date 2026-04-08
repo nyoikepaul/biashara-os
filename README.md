@@ -124,7 +124,7 @@ Backend → Recommended: Railway, Render, or any VPS with Docker
 Create your feature branch (git checkout -b feature/amazing-feature)
 Commit your changes (git commit -m 'Add amazing feature')
 Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
+Open a Pull Request  
 
 
 

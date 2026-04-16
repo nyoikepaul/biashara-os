@@ -148,7 +148,21 @@ Made with love  for Kenyan businesses
 
 
 
+## 🛠️ Developer CLI (Bash)
 
+We added a powerful Bash CLI to make daily development and operations effortless.
+
+```bash
+# Make executable (one time)
+chmod +x scripts/biashara.sh
+
+# Usage examples
+./scripts/biashara.sh start      # start everything
+./scripts/biashara.sh logs       # follow api logs
+./scripts/biashara.sh backup     # database backup
+./scripts/biashara.sh status
+./scripts/biashara.sh migrate
+./scripts/biashara.sh help
 
 
 

@@ -1,4 +1,4 @@
-#  BiasharaOs
+ BiasharaOs
 
 
 **A modern, multi-tenant Kenyan Business Operating System** A comprehensive, enterprise-grade platform built for SMEs, featuring seamless integrations for digital payments, statutory tax compliance, and omni-channel customer communication. 

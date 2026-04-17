@@ -1,4 +1,4 @@
- BiasharaOs
+# BiasharaOs
 
 
 **A modern, multi-tenant Kenyan Business Operating System** A comprehensive, enterprise-grade platform built for SMEs, featuring seamless integrations for digital payments, statutory tax compliance, and omni-channel customer communication.
@@ -9,7 +9,7 @@
 [![Dockerized](https://img.shields.io/badge/Infrastructure-Docker-2496ED?logo=docker&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-##  Core Features
+#  Core Features
 
 ###  FinTech & Billing
 * **M-Pesa Integration:** Fully integrated Daraja API supporting STK Push, C2B, and B2C transactions for automated reconciliation.
